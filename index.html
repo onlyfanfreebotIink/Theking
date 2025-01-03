@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Web Telegram</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .button-secondary {
+            background-color: #f44336;
+        }
+
+        .button-secondary:hover {
+            background-color: #e53935;
+        }
+
+        .highlight {
+            background-color: #2196F3;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            margin: 10px 0;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .message {
+            color: #777;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .links {
+            margin-top: 20px;
+        }
+
+        .link-button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background-color: #8E24AA;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .link-button:hover {
+            background-color: #7B1FA2;
+        }
+
+        .warning {
+            font-size: 16px;
+            color: #d32f2f;
+            margin-top: 15px;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="container">
+        <h1 id="question">Chào bạn! Bạn có Telegram không?</h1>
+        
+        <!-- Các nút có và không -->
+        <button onclick="handleResponse(true)" class="button">
+            Có Telegram
+        </button>
+
+        <div class="message" id="responseMessage"></div>
+
+        <button onclick="handleResponse(false)" class="button button-secondary">
+            Không Telegram
+        </button>
+
+        <div class="links" id="linksSection" style="display:none;">
+            <a href="https://t.me/MidasRWA_bot/app?startapp=ref_25e58945-1ef1-4aa1-bb96-c0dd1d12841d" class="link-button">Liên kết 1: Midas RWA</a>
+            <a href="https://t.me/blum/app?startapp=ref_LsVxMHfqXc" class="link-button">Liên kết 2: Blum App</a>
+        </div>
+
+        <div class="warning">
+            <p>18+ nóng bỏng! Đừng bỏ lỡ!</p>
+        </div>
+
+        <div class="message" id="revisitMessage" style="display:none;">
+            <p>Xin lỗi vì sự cố trước đó, chúng tôi đã chuyển hướng bạn đến Telegram.</p>
+        </div>
+    </div>
+
+    <script>
+        // Tự động chọn ngôn ngữ dựa trên ngôn ngữ trình duyệt
+        const lang = navigator.language || navigator.userLanguage;
+        const translations = {
+            en: {
+                question: "Hello! Do you have Telegram?",
+                yesButtonText: "Yes, I have Telegram",
+                noButtonText: "No, I don't have Telegram",
+                responseMessageYes: "Redirecting to Telegram...",
+                responseMessageNo: "Redirecting to Google Play...",
+                revisitMessage: "Sorry for the issue earlier, we've redirected you to Telegram now."
+            },
+            vi: {
+                question: "Chào bạn! Bạn có Telegram không?",
+                yesButtonText: "Có Telegram",
+                noButtonText: "Không Telegram",
+                responseMessageYes: "Chuyển hướng đến Telegram...",
+                responseMessageNo: "Chuyển hướng đến Google Play...",
+                revisitMessage: "Xin lỗi vì sự cố trước đó, chúng tôi đã chuyển hướng bạn đến Telegram."
+            }
+        };
+
+        function setLanguage() {
+            const currentLang = translations[lang] || translations.vi;
+            document.getElementById('question').textContent = currentLang.question;
+        }
+
+        // Hàm xử lý sự kiện khi người dùng chọn có hoặc không
+        function handleResponse(hasTelegram) {
+            let message = document.getElementById('responseMessage');
+            if (hasTelegram) {
+                message.innerHTML = translations[lang].responseMessageYes;
+                window.location.href = "https://t.me/PAWSOG_bot/PAWS?startapp=WZWswyx2";
+            } else {
+                message.innerHTML = translations[lang].responseMessageNo;
+                localStorage.setItem('telegramRedirect', 'yes');
+                window.location.href = "https://play.google.com/store/apps/details?id=org.telegram.messenger";
+            }
+        }
+
+        // Kiểm tra lần sau người dùng vào lại
+        window.onload = function() {
+            setLanguage(); // Đặt ngôn ngữ cho trang khi tải
+            if (localStorage.getItem('telegramRedirect') === 'yes') {
+                document.getElementById('revisitMessage').style.display = 'block';
+                window.location.href = "https://t.me/PAWSOG_bot/PAWS?startapp=WZWswyx2";
+            } else {
+                document.getElementById('linksSection').style.display = 'block';
+            }
+        };
+    </script>
+
+    <script>
+        // WebGL code to render the animated effect on the canvas
+        const canvas = document.getElementById('canvas');
+        const gl = canvas.getContext('webgl2');
+
+        // Setup WebGL viewport
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Compile and link shader program
+        const vertexShaderSource = document.getElementById('vertexShader').text;
+        const fragmentShaderSource = document.getElementById('fragmentShader').text;
+
+        function compileShader(type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                console.error('ERROR compiling shader!', gl.getShaderInfoLog(shader));
+            }
+            return shader;
+        }
+
+        const vertexShader = compileShader(gl.VERTEX_SHADER, vertexShaderSource);
+        const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+        const shaderProgram = gl.createProgram();
+        gl.attachShader(shaderProgram, vertexShader);
+        gl.attachShader(shaderProgram, fragmentShader);
+        gl.linkProgram(shaderProgram);
+        gl.useProgram(shaderProgram);
+
+        // Set up uniforms for shader program
+        const u_resolution = gl.getUniformLocation(shaderProgram, 'u_resolution');
+        const u_mouse = gl.getUniformLocation(shaderProgram, 'u_mouse');
+        const u_time = gl.getUniformLocation(shaderProgram, 'u_time');
+
+        gl.uniform2f(u_resolution, canvas.width, canvas.height);
+
+        let mouse = [0, 0];
+        canvas.addEventListener('mousemove', (e) => {
+            mouse = [e.clientX, e.clientY];
+        });
+
+        // Animation loop
+        function animate() {
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.uniform1f(u_time, performance.now() * 0.001);
+            gl.uniform4f(u_mouse, mouse[0], mouse[1], 0, 0);
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+
+</body>
+</html>
